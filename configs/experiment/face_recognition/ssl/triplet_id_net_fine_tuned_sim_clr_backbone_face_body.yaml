@@ -1,0 +1,80 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /datamodule: triplet_comics_seq_firebase_face_body.yaml
+  - override /model: triplet_id_net_fine_tuned_ssl_backbone_face_body.yaml
+  - override /callbacks: default.yaml # default.yaml - wandb.yaml - wandb_no_upload.yaml
+  - override /logger: csv.yaml # null  - wandb.yaml - csv.yaml
+  - override /trainer: default.yaml
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+# name of the run determines folder name in logs
+name: "triplet_id_net_fine_tuned_sim_clr_backbone_face_body"
+
+seed: 12345
+
+trainer:
+  gpus: 1
+  resume_from_checkpoint: null
+  num_sanity_val_steps: 0
+  min_epochs: 1
+  max_epochs: 20
+  gradient_clip_val: 0.5
+
+model:
+  ssl_ckpt_face: /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/sim_clr_comics_crops_face/2023-01-08_18-09-22/checkpoints/epoch_475.ckpt
+  ssl_ckpt_body: /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/sim_clr_comics_crops_body/2023-01-09_10-23-23/checkpoints/epoch_475.ckpt
+  id_latent_dim: 128
+  backbone_latent_dim_face: 2048 # 2048 512
+  backbone_latent_dim_body: 2048 # 2048 512
+  ssl_backbone_face: SIM_CLR
+  ssl_backbone_body: SIM_CLR
+  lr: 0.0005
+  weight_decay: 0.001
+  scheduler_gamma: 0.95
+  use_linear: True
+  use_dropout: False
+  only_mode: null # face, body, null (both)
+
+datamodule:
+  data_dir: ${data_dir} # data_dir is specified in config.yaml
+  train_sequences_json_path: comics_seq/train_sequences.json
+  train_triplet_index_csv_path_face: comics_seq/bounded_training_face_triplets.csv
+  train_triplet_index_csv_path_body: comics_seq/bounded_training_body_triplets.csv
+  val_sequences_json_path: comics_seq/validation_sequences.json
+  val_triplet_index_csv_path_face: comics_seq/validation_face_triplets.csv
+  val_triplet_index_csv_path_body: comics_seq/validation_body_triplets.csv
+  test_sequences_json_path: comics_seq/test_sequences.json
+  test_triplet_index_csv_path_face: comics_seq/testing_face_triplets.csv
+  test_triplet_index_csv_path_body: comics_seq/testing_body_triplets.csv
+  img_folder_root_dir_face: /scratch/users/gsoykan20/projects/DASS_Det_Inference/comics_crops_large_faces/
+  img_folder_root_dir_body: /datasets/COMICS/comics_crops/
+  batch_size: 256
+  num_workers: 5
+  pin_memory: True
+  ssl_backbone: SIM_CLR
+  img_dim: 96
+
+
+
+callbacks:
+  early_stopping:
+    patience: 5
+    monitor: "val/loss" # name of the logged metric which determines when model is improving
+    mode: "min" # "max" means higher metric value is better, can be also "min"
+
+  # this is just for hparams search
+  model_checkpoint:
+    monitor: "val/loss" # name of the logged metric which determines when model is improving
+    mode: "min" # "max" means higher metric value is better, can be also "min"
+    save_top_k: 1
+    save_last: True
+
+logger:
+  wandb:
+    tags: [ "${name}", "id_embedding_extraction", "face+body" ]

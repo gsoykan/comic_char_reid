@@ -1,11 +1,9 @@
-from typing import Optional, Tuple, Any
+from typing import Optional, Tuple
 
 import torch
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader, Dataset
 
-from src.datamodules.components.face_recognition.ssl_contrastive_comics_crops_dataset import \
-    SSLContrastiveComicsCropsDataset
 from src.datamodules.components.face_recognition.ssl_contrastive_comics_crops_face_body_aligned_dataset import \
     SSLContrastiveComicsCropsFaceBodyAlignedDataset
 from src.datamodules.components.vision_transform_setting import VisionTransformSetting, ContrastiveTransformations

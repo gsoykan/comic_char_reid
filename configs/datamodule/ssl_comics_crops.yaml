@@ -1,0 +1,13 @@
+_target_: src.datamodules.ssl_comics_crops_datamodule.SSLComicsCropsDataModule
+
+data_dir: ${data_dir} # data_dir is specified in config.yaml
+folder_dir: ${data_dir}/comics_crops
+prefiltered_csv_folder_dir: ${data_dir}/ssl/filtered_all_body.csv
+batch_size: 256
+train_val_test_split: [0.92, 0.04, 0.04]
+item_name_should_include: bodies
+item_type: body
+limit_search_files: null
+num_workers: 5
+pin_memory: False
+is_torch_transform: True

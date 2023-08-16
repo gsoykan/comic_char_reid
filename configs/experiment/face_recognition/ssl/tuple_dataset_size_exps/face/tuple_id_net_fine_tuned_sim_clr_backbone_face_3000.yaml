@@ -1,0 +1,66 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /datamodule: tuple_comics_seq_firebase.yaml
+  - override /model: tuple_id_net_fine_tuned_ssl_backbone.yaml
+  - override /callbacks: wandb.yaml # default.yaml - wandb.yaml - wandb_no_upload.yaml
+  - override /logger: wandb.yaml # null  - wandb.yaml
+  - override /trainer: default.yaml
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+# name of the run determines folder name in logs
+name: "tuple_id_net_fine_tuned_sim_clr_backbone_face_dataset_size_exp"
+
+seed: 12345
+
+trainer:
+  gpus: 1
+  resume_from_checkpoint: null
+  num_sanity_val_steps: 0
+  min_epochs: 1
+  max_epochs: 50
+  gradient_clip_val: 0.5
+
+model:
+  ssl_ckpt: /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/sim_clr_comics_crops_face/2022-12-28_20-21-56/checkpoints/epoch_468.ckpt
+  id_latent_dim: 64
+  backbone_latent_dim: 512
+  ssl_backbone: SIM_CLR
+  lr: 0.0005
+  weight_decay: 0.01
+  scheduler_gamma: 0.95
+
+datamodule:
+  data_dir: ${data_dir} # data_dir is specified in config.yaml
+  tuple_index_csv_path: comics_seq/face_tuples.csv
+  img_folder_root_dir: /scratch/users/gsoykan20/projects/DASS_Det_Inference/comics_crops_large_faces/
+  train_val_test_split: [ -4000, -1000, -1000 ]
+  batch_size: 256
+  num_workers: 5
+  pin_memory: True
+  is_comics_crops_with_body_face: False
+  ssl_backbone: SIM_CLR
+  item_type: face
+  series_test_mode: True
+
+callbacks:
+  early_stopping:
+    patience: 5
+    monitor: "val/loss" # name of the logged metric which determines when model is improving
+    mode: "min" # "max" means higher metric value is better, can be also "min"
+
+  # this is just for hparams search
+  model_checkpoint:
+    monitor: "val/loss" # name of the logged metric which determines when model is improving
+    mode: "min" # "max" means higher metric value is better, can be also "min"
+    save_top_k: 1
+    save_last: True
+
+logger:
+  wandb:
+    tags: [ "${name}", "id_embedding_extraction", "face", "size_3000" ]

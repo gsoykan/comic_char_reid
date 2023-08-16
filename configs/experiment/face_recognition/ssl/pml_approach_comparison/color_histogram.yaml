@@ -1,0 +1,103 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /datamodule: comics_seq_firebase_face_body.yaml
+  - override /model: pml_id_net_fine_tuned_ssl_backbone_face_body.yaml
+  - override /callbacks: default.yaml # default.yaml - wandb.yaml - wandb_no_upload.yaml - wandb_without_pred.yaml
+  - override /logger: csv.yaml # null  - wandb.yaml - csv.yaml
+  - override /trainer: default.yaml
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+# name of the run determines folder name in logs
+name: "pml_id_net_color_histogram"
+
+seed: 12345
+
+trainer:
+  gpus: 1
+  resume_from_checkpoint: null
+  num_sanity_val_steps: 0
+  min_epochs: 1
+  max_epochs: 20
+  gradient_clip_val: 0.5
+
+model:
+  ssl_ckpt_face: null
+  ssl_ckpt_body: null
+  is_face_body_aligned_module: True # True
+  id_latent_dim: null # actually 96 (32 x 3)
+  backbone_latent_dim_face: 96 # 2048 512
+  backbone_latent_dim_body: 96 # 2048 512
+  ssl_backbone_face: null # SIM_CLR - SIM_CLR_DEEPER_LAST
+  ssl_backbone_body: null # SIM_CLR - SIM_CLR_DEEPER_LAST - when null use face...
+  lr: 0.00075
+  weight_decay: 0.05
+  scheduler_gamma: 0.95
+  use_linear: True
+  use_dropout: False
+  only_mode: null # face, body, null
+  pml_setup_v: 3 # 3 - 7 is the best
+  l2_normalize_embeddings: True # True
+  use_triplets_dataset_for_val_test: False # False - True
+  fusion_strategy: sum  # cat - sum - mean - favor_body - favor_face
+  by_pass_id_net: True # makes id-net Identity
+
+  override_backbones:
+    model: color_histogram
+
+
+datamodule:
+  data_dir: ${data_dir} # data_dir is specified in config.yaml
+  train_char_faces_json_path: comics_seq/train_char_faces.json
+  train_char_bodies_json_path: comics_seq/train_char_bodies.json
+  val_char_faces_json_path: comics_seq/val_char_faces.json
+  val_char_bodies_json_path: comics_seq/val_char_bodies.json
+  test_char_faces_json_path: comics_seq/test_char_faces.json
+  test_char_bodies_json_path: comics_seq/test_char_bodies.json
+  use_triplets_dataset_for_val_test: False # False - True
+  intense_transform: True # True
+  no_transform: False # True
+  use_singular_chars: False
+
+  train_sequences_json_path: comics_seq/train_sequences.json
+  train_triplet_index_csv_path_face: comics_seq/bounded_training_face_triplets.csv
+  train_triplet_index_csv_path_body: comics_seq/bounded_training_body_triplets.csv
+  val_sequences_json_path: comics_seq/validation_sequences.json
+  val_triplet_index_csv_path_face: comics_seq/validation_face_triplets.csv
+  val_triplet_index_csv_path_body: comics_seq/validation_body_triplets.csv
+  test_sequences_json_path: comics_seq/test_sequences.json
+  test_triplet_index_csv_path_face: comics_seq/testing_face_triplets.csv
+  test_triplet_index_csv_path_body: comics_seq/testing_body_triplets.csv
+  img_folder_root_dir_face: /scratch/users/gsoykan20/projects/DASS_Det_Inference/comics_crops_large_faces/
+  img_folder_root_dir_body: /datasets/COMICS/comics_crops/
+  randomly_mask_face_or_body: 0 # 0.1 between 0 - 1 (should be 0 when only mode is active)
+  batch_size: 16
+  num_workers: 5
+  pin_memory: True
+  ssl_backbone: SIM_CLR
+  # body img dim, face is always 96
+  img_dim: 128
+
+
+
+callbacks:
+  early_stopping:
+    patience: 5
+    monitor: "val/mean_average_precision_at_r" # name of the logged metric which determines when model is improving
+    mode: "max" # "max" means higher metric value is better, can be also "min"
+
+  # this is just for hparams search
+  model_checkpoint:
+    monitor: "val/mean_average_precision_at_r" # name of the logged metric which determines when model is improving
+    mode: "max" # "max" means higher metric value is better, can be also "min"
+    save_top_k: 1
+    save_last: True
+
+logger:
+  wandb:
+    tags: [ "${name}", "id_embedding_extraction", "color_histogram" ]

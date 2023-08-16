@@ -1,0 +1,13 @@
+_target_: src.models.sim_clr_module.SimCLRLitModule
+
+# model
+model_name: resnet18
+encoder_dim: null
+use_deeper_proj_head: False
+hidden_dim: 128
+# loss
+temperature: 0.07
+# training
+max_epochs: 500
+lr: 5e-4
+weight_decay: 0.0001

@@ -1,0 +1,14 @@
+_target_: src.datamodules.triplet_comics_seq_firebase_datamodule.TripletComicsSeqFirebaseDataModule
+
+data_dir: ${data_dir} # data_dir is specified in config.yaml
+triplet_index_csv_path: comics_seq/training_face_triplets.csv
+triplet_index_test_csv_path: comics_seq/testing_face_triplets.csv
+img_folder_root_dir: /scratch/users/gsoykan20/projects/DASS_Det_Inference/comics_crops_large_faces/
+train_val_test_split: [ null, -20000, null ]
+batch_size: 256
+num_workers: 5
+pin_memory: False
+is_comics_crops_with_body_face: False
+ssl_backbone: null
+series_test_mode: False
+img_dim: 96

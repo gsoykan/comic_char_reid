@@ -1,0 +1,78 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /datamodule: ssl_comics_crops.yaml
+  - override /model: corinfomax.yaml
+  - override /callbacks: wandb_eigen.yaml # default.yaml - wandb.yaml - wandb_no_upload.yaml
+  - override /logger: wandb.yaml # null  - wandb.yaml
+  - override /trainer: default.yaml
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+# name of the run determines folder name in logs
+name: "corinfomax_comics_crops_body"
+
+seed: 12345
+
+trainer:
+  gpus: 1
+  resume_from_checkpoint: null
+  num_sanity_val_steps: 0
+  min_epochs: 1
+  max_epochs: 400
+  gradient_clip_val: 0.5
+
+model:
+  # model
+  backbone_name: resnet50
+  projector: 4096-4096-128
+  normalize_on: True
+  # loss
+  R_ini: 1.0
+  la_R: 0.01
+  la_mu: 0.01
+  R_eps_weight: 1e-08
+  sim_loss_weight: 500.0
+  cov_loss_weight: 1.0
+  # training
+  max_epochs: 400
+  lr: 1
+  min_lr: 5e-3
+  warmup_epochs: 10
+  warmup_start_lr: 0.003
+  weight_decay: 0.0001
+
+datamodule:
+  data_dir: ${data_dir} # data_dir is specified in config.yaml
+  folder_dir: /datasets/COMICS/comics_crops
+  prefiltered_csv_folder_dir: ${data_dir}/ssl/filtered_all_body_100k.csv
+  batch_size: 1024
+  train_val_test_split: [ 0.95, 0.02, 0.03 ]
+  item_name_should_include: bodies
+  item_type: body
+  limit_search_files: null
+  num_workers: 5
+  pin_memory: True
+  is_torch_transform: True
+  img_dim:  96
+
+callbacks:
+  early_stopping:
+    patience: 400
+    monitor: "val/loss" # name of the logged metric which determines when model is improving
+    mode: "min" # "max" means higher metric value is better, can be also "min"
+
+  # this is just for hparams search
+  model_checkpoint:
+    monitor: "val/loss" # name of the logged metric which determines when model is improving
+    mode: "min" # "max" means higher metric value is better, can be also "min"
+    save_top_k: 1
+    save_last: True
+
+logger:
+  wandb:
+    tags: [ "${name}", "ssl", "corinfomax", "body" ]

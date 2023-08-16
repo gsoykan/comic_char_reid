@@ -1,0 +1,17 @@
+_target_: src.datamodules.ssl_contrastive_comics_crops_face_body_aligned_datamodule.SSLContrastiveComicsCropsFaceBodyAlignedDataModule
+
+data_dir: ${data_dir} # data_dir is specified in config.yaml
+
+face_prefiltered_csv_folder_dir: ${data_dir}/ssl/filtered_all_face_10k.csv
+body_prefiltered_csv_folder_dir: ${data_dir}/ssl/filtered_all_body_10k.csv
+face_folder_dir: /scratch/users/gsoykan20/projects/DASS_Det_Inference/comics_crops_large_faces/
+body_folder_dir: /datasets/COMICS/comics_crops
+face_body_csv_path: ssl/merged_face_body.csv
+
+face_img_dim: 96
+body_img_dim: 128
+limit_search_files: null
+train_val_test_split: [ 0.92, 0.04, 0.04 ]
+batch_size: 256
+num_workers: 5
+pin_memory: True

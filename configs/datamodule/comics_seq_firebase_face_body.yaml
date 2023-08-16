@@ -1,0 +1,31 @@
+_target_: src.datamodules.comics_seq_firebase_face_body_datamodule.ComicsSeqFirebaseFaceBodyDataModule
+
+data_dir: ${data_dir} # data_dir is specified in config.yaml
+
+train_char_faces_json_path: comics_seq/train_char_faces.json
+train_char_bodies_json_path: comics_seq/train_char_bodies.json
+val_char_faces_json_path: comics_seq/val_char_faces.json
+val_char_bodies_json_path: comics_seq/val_char_bodies.json
+test_char_faces_json_path: comics_seq/test_char_faces.json
+test_char_bodies_json_path: comics_seq/test_char_bodies.json
+use_triplets_dataset_for_val_test: True
+
+train_sequences_json_path: comics_seq/train_sequences.json
+train_triplet_index_csv_path_face: comics_seq/bounded_training_face_triplets.csv
+train_triplet_index_csv_path_body: comics_seq/bounded_training_body_triplets.csv
+val_sequences_json_path: comics_seq/validation_sequences.json
+val_triplet_index_csv_path_face: comics_seq/validation_face_triplets.csv
+val_triplet_index_csv_path_body: comics_seq/validation_body_triplets.csv
+test_sequences_json_path: comics_seq/test_sequences.json
+test_triplet_index_csv_path_face: comics_seq/testing_face_triplets.csv
+test_triplet_index_csv_path_body: comics_seq/testing_body_triplets.csv
+img_folder_root_dir_face: /scratch/users/gsoykan20/projects/DASS_Det_Inference/comics_crops_large_faces/
+img_folder_root_dir_body: /datasets/COMICS/comics_crops/
+
+batch_size: 256
+num_workers: 5
+pin_memory: True
+ssl_backbone: null
+img_dim: 96
+
+   

@@ -1,0 +1,80 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /datamodule: ssl_contrastive_comics_crops.yaml
+  - override /model: simclr.yaml
+  - override /callbacks: wandb_without_pred.yaml # default.yaml - wandb.yaml - wandb_no_upload.yaml
+  - override /logger: wandb.yaml # csv.yaml  - wandb.yaml
+  - override /trainer: default.yaml
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+# name of the run determines folder name in logs
+name: "sim_clr_comics_crops_body"
+
+seed: 12345
+
+trainer:
+  gpus: 2
+  devices: 2
+#   strategy: ddp
+  strategy:
+    _target_: pytorch_lightning.strategies.DDPStrategy
+    find_unused_parameters: False
+  accelerator: gpu
+  sync_batchnorm: True
+  resume_from_checkpoint: null
+  num_sanity_val_steps: 0
+  min_epochs: 1
+  max_epochs: 500
+  gradient_clip_val: 0.5
+
+model:
+  # model
+  model_name: resnet50
+  encoder_dim: 2048
+  use_deeper_proj_head: True
+  normalize_projections: True
+  hidden_dim: 128
+  # loss
+  temperature: 0.07
+  loss_fn: info_nce
+  # training
+  max_epochs: 500
+  lr: 5e-4
+  weight_decay: 0.01
+
+datamodule:
+  data_dir: ${data_dir} # data_dir is specified in config.yaml
+  prefiltered_csv_folder_dir: ${data_dir}/ssl/filtered_all_body_100k.csv
+  folder_dir: /datasets/COMICS/comics_crops
+  alternative_folder_dir: /scratch/users/gsoykan20/projects/DASS_Det_Inference/comics_crops_lost
+  item_type: body
+  img_dim: 128
+  limit_search_files: null
+  train_val_test_split: [ 0.92, 0.04, 0.04 ]
+  batch_size: 320
+  num_workers: 5
+  pin_memory: True
+
+callbacks:
+  early_stopping:
+    patience: 200
+    monitor: "val/loss" # name of the logged metric which determines when model is improving
+    mode: "min" # "max" means higher metric value is better, can be also "min"
+
+  # this is just for hparams search
+  model_checkpoint:
+    monitor: "val/loss" # name of the logged metric which determines when model is improving
+    mode: "min" # "max" means higher metric value is better, can be also "min"
+    save_top_k: 10
+    save_last: True
+    every_n_epochs: 40
+
+logger:
+  wandb:
+    tags: [ "${name}", "ssl", "sim_clr", "body" ]

@@ -1,0 +1,11 @@
+_target_: src.datamodules.ssl_contrastive_comics_crops_datamodule.SSLContrastiveComicsCropsDataModule
+
+data_dir: ${data_dir} # data_dir is specified in config.yaml
+prefiltered_csv_folder_dir: ${data_dir}/ssl/filtered_all_body.csv
+item_type: body
+img_dim: 96
+limit_search_files: null
+train_val_test_split: [ 0.92, 0.04, 0.04 ]
+batch_size: 256
+num_workers: 5
+pin_memory: False
