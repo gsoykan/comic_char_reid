@@ -13,28 +13,7 @@ defaults:
   # experiment configs allow for version control of specific configurations
   # e.g. best hyperparameters for each combination of model and datamodule
   - experiment: face_recognition/ssl/pml_id_net_fine_tuned_sim_clr_backbone_face_body
-  # replication_FOLD_text_model_text_cloze_local
-  # replication_FOLD_text_model_text_cloze_cluster
-  # replication_FOLD_text_model_char_coherence_cluster.yaml
-  # replication_FOLD_text_model_visual_cloze_cluster
-  # replication_FOLD_image_model_visual_cloze_local
-  # replication_FOLD_image_model_visual_cloze_cluster
-  # replication_FOLD_image_model_text_cloze_cluster
-  # replication_FOLD_image_model_visual_cloze_preextracted_cluster
-  # replication_FOLD_image_model_visual_cloze_preextracted_cluster_hard
-  # replication_FOLD_image_plus_text_model_visual_cloze_local
-  # replication_FOLD_image_plus_text_model_visual_cloze_cluster
-  # replication_FOLD_image_plus_text_model_text_cloze_cluster
-  # replication_image_model_visual_cloze_local
-  # replication_text_model_text_cloze_local
-  # replication_text_model_text_cloze_cluster
-  # replication_text_model_char_coherence_cluster
-  # replication_FOLD_image_model_char_coherence_cluster
-  # replication_FOLD_image_plus_text_model_char_coherence_cluster
-  # replication_FOLD_nc_image_plus_text_model_text_cloze_cluster
-  # text_embedding_experiments/bert_replication_FOLD_text_model_text_cloze_cluster
-  # text_embedding_experiments/elmo_replication_FOLD_text_model_text_cloze_cluster.yaml
-    
+
   # debugging config (enable through command line, e.g. `python train.py debug=default)
   - debug: null
 

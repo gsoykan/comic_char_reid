@@ -110,10 +110,10 @@ class ComicsSeqFirebaseFaceBodySequenceIteratorDataset(Dataset):
 
         for i, char_instance in enumerate(seq_chars):
             char_id, face_path, body_path = char_instance.get('char_id'), \
-                                            char_instance.get('face'), \
-                                            char_instance.get('body')
+                char_instance.get('face'), \
+                char_instance.get('body')
             face_id, body_id = char_instance.get('face_id'), \
-                               char_instance.get('body_id')
+                char_instance.get('body_id')
             img_face, img_body = get_image_data(face_path, body_path)
             faces.append(img_face)
             bodies.append(img_body)

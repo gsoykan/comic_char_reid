@@ -11,8 +11,7 @@ defaults:
   - log_dir: evaluation.yaml
 
   # - experiment: face_recognition/ssl/pml_id_net_fine_tuned_sim_clr_backbone_face_body.yaml
-  - experiment: my_comics/char_to_speech/panel_char_text+char_to_speech_attribution
-
+  - experiment: face_recognition/ssl/pml_id_net_fine_tuned_sim_clr_backbone_face_body
 
   # enable color logging
   - override hydra/hydra_logging: colorlog
@@ -30,66 +29,4 @@ seed: null
 
 name: "default"
 
-# passing checkpoint path is necessary
-# ckpt_path: /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/pml_id_net_fine_tuned_sim_clr_backbone_face_body_model_search/2023-06-30_22-46-55/checkpoints/epoch_018.ckpt # triplet-margin
-# ckpt_path: /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/my_comics/2023-08-01_23-07-45/checkpoints/epoch_016.ckpt # contrastive
-ckpt_path: /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/my_comics/2023-07-31_01-14-48/checkpoints/epoch_057.ckpt
-
-
-# replication_text_model_char_coherence_cluster_256_test
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_text_model_char_coherence/2022-04-09_19-54-29/checkpoints/epoch_009.ckpt
-
-# replication_test/replication_text_model_text_cloze_cluster
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_text_model_text_cloze/2022-04-26_12-00-28/checkpoints/epoch_022.ckpt
-
-# replication_image_plus_text_model_text_cloze_cluster
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_image_plus_text_model_text_cloze/2022-04-20_22-19-08/checkpoints/epoch_023.ckpt
-
-# replication_image_model_char_coherence_cluster_256
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_image_model_char_coherence/2022-04-21_12-14-48/checkpoints/epoch_013.ckpt
-
-# replication_text_model_text_cloze_cluster_hard
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_text_model_text_cloze/2022-04-21_14-41-19/checkpoints/epoch_008.ckpt
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_text_model_text_cloze/2022-04-26_12-59-54/checkpoints/epoch_010.ckpt
-
-# replication_image_plus_text_model_char_coherence_cluster_256
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_image_plus_text_model_char_coherence/2022-04-22_21-11-41/checkpoints/epoch_009.ckpt
-
-# replication_nc_image_plus_text_model_char_coherence_cluster
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_nc_replication_image_plus_text_model_char_coherence/2022-04-22_22-51-37/checkpoints/epoch_014.ckpt
-
-# replication_nc_image_plus_text_model_text_cloze_cluster
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_nc_image_plus_text_model_text_cloze/2022-04-22_20-02-46/checkpoints/epoch_023.ckpt
-
-# replication_image_model_visual_cloze_cluster
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_image_model_visual_cloze/2022-04-21_17-48-53/checkpoints/epoch_014.ckpt
-
-# replication_image_plus_text_model_visual_cloze_cluster
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_image_plus_text_model_visual_cloze/2022-04-24_19-56-51/checkpoints/epoch_018.ckpt
-
-# replication_text_model_visual_cloze_cluster
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_text_model_visual_cloze/2022-04-24_22-50-49/checkpoints/epoch_018.ckpt
-
-# replication_image_model_text_cloze_cluster
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_image_model_text_cloze/2022-04-25_09-11-36/checkpoints/epoch_013.ckpt
-
-# replication_text_model_text_cloze_cluster_hard
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_text_model_text_cloze/2022-04-25_19-07-44/checkpoints/epoch_021.ckpt
-
-# replication_image_model_text_cloze_cluster_hard
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_image_model_text_cloze/2022-04-25_19-52-14/checkpoints/epoch_018.ckpt
-
-# replication_image_plus_text_model_text_cloze_cluster_hard
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_image_plus_text_model_text_cloze/2022-04-25_23-04-52/checkpoints/epoch_022.ckpt
-
-# replication_image_plus_text_model_visual_cloze_cluster_hard
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_image_plus_text_model_visual_cloze/2022-04-24_19-56-51/checkpoints/epoch_018.ckpt
-
-# replication_text_model_visual_cloze_cluster_hard
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_text_model_visual_cloze/2022-04-26_00-00-48/checkpoints/epoch_009.ckpt
-
-# replication_image_model_visual_cloze_cluster_hard
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_image_model_visual_cloze/2022-04-26_00-31-07/checkpoints/epoch_012.ckpt
-
-# replication_nc_image_plus_text_model_text_cloze_cluster_hard
-# /scratch/users/gsoykan20/projects/amazing-mysteries-of-gutter-demystified/logs/experiments/runs/comics_replication_nc_image_plus_text_model_text_cloze/2022-04-26_00-41-01/checkpoints/epoch_019.ckpt
+ckpt_path: <add-yours>

@@ -12,11 +12,8 @@ defaults:
 
   # experiment configs allow for version control of specific configurations
   # e.g. best hyperparameters for each combination of model and datamodule
-  - experiment: my_comics/local/text_only+scene_cloze+hard
-  # bert_text_baseline/dynamic_data/bert_concat_ctp_DYNAMIC_text_model_text_cloze_cluster_local
-   # bert_text_baseline/fold/bert_concat_ctp_FOLD_text_model_text_cloze_local
-   # bert_text_baseline/dynamic_data/bert_concat_ctp_DYNAMIC_text_model_text_cloze_cluster_local
-    
+  - experiment: face_recognition/ssl/pml_id_net_fine_tuned_sim_clr_backbone_face_body
+
   # debugging config (enable through command line, e.g. `python train.py debug=default)
   - debug: null
 

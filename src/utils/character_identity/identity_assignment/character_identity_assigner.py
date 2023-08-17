@@ -15,7 +15,14 @@ from src.utils.character_identity.identity_assignment.comic_seq_firebase_face_bo
 from sklearn.cluster import DBSCAN, AgglomerativeClustering
 from sklearn.metrics.pairwise import pairwise_distances
 
-from src.utils.detection.bounding_box_utils import BOX_COLOR
+BOX_COLOR = [
+    [0, 0, 0],
+    [128, 0, 0],
+    [0, 128, 0],
+    [128, 128, 0],
+    [0, 0, 128]
+]
+TEXT_COLOR = (255, 255, 255)  # White
 
 
 class UnassignedCharacter:

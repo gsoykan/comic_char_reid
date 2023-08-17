@@ -1,21 +1,19 @@
+import glob
 import itertools
 import json
 import os
-import random
+import time
 from enum import Enum
-from typing import List, Optional, Callable, Tuple, Dict
+from typing import Callable, List, Optional, Tuple, Dict
 
-import albumentations as A
 import cv2
 import numpy as np
 import pandas as pd
 import torch
 from PIL import Image
-from numba import jit
-from tqdm import tqdm
+from shapely import affinity
 from shapely.geometry import box
-
-from src.utils.pickle_helper import PickleHelper
+from tqdm import tqdm
 
 
 def search_files(extension='.ttf',
@@ -281,3 +279,110 @@ def cat_df(dfs: List[Optional[pd.DataFrame]]) -> Optional[pd.DataFrame]:
         return dfs[0]
 
     return pd.concat(dfs, ignore_index=True)
+
+
+def timeit(f):
+    def timed(*args, **kw):
+        ts = time.time()
+        result = f(*args, **kw)
+        te = time.time()
+        print('func:%r args:[%r, %r] took: %2.4f sec' % \
+              (f.__name__, args, kw, te - ts))
+        return result
+
+    return timed
+
+
+@timeit
+def alternative_search_files(ext: str, search_dir: str) -> List[str]:
+    # Find all the files with the current extension in the search directory and its subdirectories
+    files = glob.glob(os.path.join(search_dir, "**", ext), recursive=True)
+    return files
+
+
+def convert_raw_samples(raw_samples: str) -> List[Tuple[str, float]]:
+    """
+    This is primarily used for visualizing embedding projectors neighbor outputs..
+    raw samples are in the following format:
+    3334_12_3_face_0
+0.0
+1593_20_4_face_0
+0.043
+    """
+    lines = raw_samples.splitlines()
+    ids = lines[::2]
+    scores = lines[1::2]
+    items = []
+    for item in zip(ids, scores):
+        items.append((item[0], float(item[1])))
+    return items
+
+
+def calculate_bb_area(bb) -> float:
+    return box(*bb).area
+
+
+def get_iou(a, b, epsilon=1e-5):
+    """Given two boxes `a` and `b` defined as a list of four numbers:
+            [x1,y1,x2,y2]
+        where:
+            x1,y1 represent the upper left corner
+            x2,y2 represent the lower right corner
+        It returns the Intersect of Union score for these two boxes.
+        source: http://ronny.rest/tutorials/module/localization_001/iou/
+    Args:
+        a:          (list of 4 numbers) [x1,y1,x2,y2]
+        b:          (list of 4 numbers) [x1,y1,x2,y2]
+        epsilon:    (float) Small value to prevent division by zero
+    Returns:
+        (float) The Intersect of Union score.
+    """
+    # COORDINATES OF THE INTERSECTION BOX
+    x1 = max(a[0], b[0])
+    y1 = max(a[1], b[1])
+    x2 = min(a[2], b[2])
+    y2 = min(a[3], b[3])
+
+    # AREA OF OVERLAP - Area where the boxes intersect
+    width = x2 - x1
+    height = y2 - y1
+    # handle case where there is NO overlap
+    if (width < 0) or (height < 0):
+        return 0.0
+    area_overlap = width * height
+
+    # COMBINED AREA
+    area_a = (a[2] - a[0]) * (a[3] - a[1])
+    area_b = (b[2] - b[0]) * (b[3] - b[1])
+    area_combined = area_a + area_b - area_overlap
+
+    # RATIO OF AREA OF OVERLAP OVER COMBINED AREA
+    iou = area_overlap / (area_combined + epsilon)
+    return iou
+
+
+def make_bounding_box_square(x1,
+                             y1,
+                             x2,
+                             y2,
+                             scale: Optional[float] = None) -> List[int]:
+    if scale is not None:
+        bbox = box(x1, y1, x2, y2)
+        envelope = bbox.envelope
+        scaled_envelope = affinity.scale(envelope, xfact=scale, yfact=scale)
+        x1, y1, x2, y2 = scaled_envelope.bounds
+    # Calculate the width and height of the bounding box
+    width = x2 - x1
+    height = y2 - y1
+
+    # Scale the bounding box to make it square
+    if width > height:
+        # The bounding box is wider than it is tall, so we need to increase the height
+        y1 -= (width - height) / 2
+        y2 += (width - height) / 2
+    else:
+        # The bounding box is taller than it is wide, so we need to increase the width
+        x1 -= (height - width) / 2
+        x2 += (height - width) / 2
+
+    return int(x1), int(y1), int(x2), int(y2)
