@@ -63,7 +63,7 @@ and bodies of character. Currently, we only share bounding boxes of those with "
 
 ## Checkpoints
 
-- [Identity-Aware Self-Supervised Model](https://drive.google.com/file/d/1-NtMYf_I7fQwY6AMEPmXq6n17jMkGm2n/view?usp=sharing) 
+- [Identity-Aware Self-Supervised Model](https://drive.google.com/file/d/1BNY9Gqt8qg1uz84WdSLYlQXDJZuFuGfV/view?usp=sharing) 
 - [Fine-Tuned Re-Identification Network](https://drive.google.com/file/d/1-NtMYf_I7fQwY6AMEPmXq6n17jMkGm2n/view?usp=sharing)
 
 ## How to run
